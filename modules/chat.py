@@ -5,7 +5,10 @@ import google.generativeai as genai
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
-generation_config = GenerationConfig(temperature=2)
+generation_config = GenerationConfig(  
+    temperature=2,
+    max_tokens=2000
+)
 
 safety_settings = {
     HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
