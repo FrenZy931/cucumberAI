@@ -60,7 +60,7 @@ personalities = load_personalities()
 @discord.app_commands.AppCommandError
 async def error(interaction : discord.Interaction):
     await interaction.response.send_message("You don't have permissions to use this command")
-@bot.tree.command(name="clear_ai_history", description="Removes history for specific channel")
+@bot.tree.command(name="clear-ai-history", description="Removes history for specific channel")
 async def clear_ai_history(interaction: discord.Interaction, channel: discord.TextChannel):
     with db_connection:
             db_cursor.execute("UPDATE channels SET history = '' WHERE server_id = ? AND channel_id = ?", (interaction.guild.id, channel.id))
@@ -71,7 +71,7 @@ async def clear_ai_history(interaction: discord.Interaction, channel: discord.Te
 @discord.app_commands.AppCommandError
 async def error(interaction : discord.Interaction):
     await interaction.response.send_message("You don't have permissions to use this command")
-@bot.tree.command(name="ai_remove", description="Remove AI setup for a specific channel")
+@bot.tree.command(name="ai-remove", description="Remove AI setup for a specific channel")
 async def ai_remove(interaction: discord.Interaction, channel: discord.TextChannel):
     with db_connection:
         db_cursor.execute("SELECT * FROM channels WHERE server_id = ? AND channel_id = ?", (interaction.guild.id, channel.id))
@@ -88,8 +88,8 @@ async def ai_remove(interaction: discord.Interaction, channel: discord.TextChann
 @discord.app_commands.AppCommandError
 async def error(interaction : discord.Interaction):
     await interaction.response.send_message("You don't have permissions to use this command")
-@bot.tree.command(name="ai_setup", description="Setup or update AI with personality for a specific channel")
-async def ai_setup(interaction: discord.Interaction, channel: discord.TextChannel, personality: typing.Literal['Default', 'discordcucumber', 'girlfriend']):
+@bot.tree.command(name="ai-setup", description="Setup or update AI with personality for a specific channel")
+async def ai_setup(interaction: discord.Interaction, channel: discord.TextChannel, personality: typing.Literal['Default', 'GenZ', 'NSFW']):
     with db_connection:
         db_cursor.execute("SELECT * FROM channels WHERE server_id = ? AND channel_id = ?", (interaction.guild.id, channel.id))
         result = db_cursor.fetchone()
@@ -126,7 +126,7 @@ def get_model_response(input_text, personality_content, chat_history):
         end_index = output.find("GENERATE IMAGE|")
         image_prompt = output[start_index:end_index].strip()
 
-        return f"Generating image, please wait...\n{output[:start_index]}{image_prompt}{output[end_index + len('GENERATE IMAGE|'):]}"
+        return f"Generating response, please wait...\n{output[:start_index]}{image_prompt}{output[end_index + len('GENERATE IMAGE|'):]}"
 
     return output
 
@@ -169,19 +169,19 @@ async def SendText(response, channel):
     await channel.send(response)
 
 async def SendImage(response, channel):
-    try:
-        image_generation_text = await channel.send("Generating image, please wait...")
-        image_prompt = response.split("Generating image, please wait...\n")[1].strip()
-        image_data = await asyncio.to_thread(GenerateImage, image_prompt)
-        response = response.replace(f"Generating image, please wait...", "")
+    image_generation_text = await channel.send("Generating response, please wait...")
+    image_prompt = response.split("Generating response, please wait...\n")[1].strip()
+    image_data = await asyncio.to_thread(GenerateImage, image_prompt)
+    if image_data:
+        response = response.replace(f"Generating response, please wait...", "")
         response = response.split("|GENERATE IMAGE")[0]
         reply = response
         response = ""
         await image_generation_text.delete()
         await channel.send(reply, file=discord.File(image_data, filename="generated_image.png"))
-    except Exception as e:
+    else:
         await image_generation_text.delete()
-        await channel.send(f"An error occurred while generating the image: sd3.5 delay exceeded, exiting program.")
+        await channel.send("Failed to generate image.")
 
 @bot.event
 async def on_message(message):
