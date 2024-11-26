@@ -1,3 +1,5 @@
-HUGGING_FACE_API_KEY = "insert"
-GEMINI_API_KEY = "insert"
-DISCORD_BOT_TOKEN = "insert"
+import os
+
+HUGGING_FACE_API_KEY = os.getenv('HUGGING_FACE_API_KEY')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+DISCORD_BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
