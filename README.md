@@ -21,11 +21,10 @@ For support or access to a hosted version of the bot (if you don't want to deplo
    cd cucumberAI
 
 2. **Set up API keys:**
-    Open config.py.
-    Add your:
-        1. Discord bot token.
-        2. Gemini API key.
-        3. Hugging Face API key.
+    ```bash
+    export DISCORD_BOT_TOKEN='your_token'
+    export GEMINI_API_KEY='your api key'
+    export HUGGING_FACE_API_KEY='your api key'
 
 3. **Install dependencies:**
     ```bash
