@@ -1,5 +1,7 @@
 # cucumberAI
 
+**WARNING: This project was discontinued and is no longer supported**
+
 **cucumberAI** is a simple Discord chatbot and image generation tool. It's powered by the Gemini API and Hugging Face's Stable Diffusion 3.5 Large API.
 
 For support or access to a hosted version of the bot (if you don't want to deploy it yourself), join the [official support Discord server](https://discord.gg/awJMWYgV5c).
